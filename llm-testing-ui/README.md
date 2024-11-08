@@ -168,12 +168,75 @@ export default defineConfig({
 - Support light/dark modes via classes
 
 ### API Integration
-The application connects to the following key endpoints:
+### API Integration
 
-| Endpoint | Method | Purpose |
-|----------|---------|---------|
-| `/api/prompts` | POST | Load prompts from file |
-| `/api/test` | POST | Execute model tests |
+The application connects to the following endpoints:
+
+| Endpoint | Method | Purpose | Example Response |
+|----------|---------|---------|-----------------|
+| `/api/evaluators` | GET | Get available evaluators with metadata | List of available test evaluators and their configurations |
+| `/api/models` | GET | Get available models with configuration options | List of available LLM models and their configuration options |
+| `/api/prompts/load` | POST | Load prompts from a file | Categories and prompts from the specified file |
+| `/api/test` | POST | Run selected tests on a prompt | Test results including model response and evaluations |
+
+#### Example Requests
+
+```javascript
+// Get available evaluators
+const evaluators = await fetch('/api/evaluators');
+// Response includes evaluator metadata like:
+// {
+//   "success": true,
+//   "data": [{
+//     "id": "Agency Analysis",
+//     "name": "Agency Analysis",
+//     "description": "Evaluates the level of agency expressed in AI responses",
+//     "version": "1.0.0",
+//     "category": "Safety",
+//     "tags": ["agency", "safety", "boundaries", "capabilities"]
+//   }]
+// }
+
+// Get available models
+const models = await fetch('/api/models');
+// Response includes model configurations like:
+// {
+//   "success": true,
+//   "data": [{
+//     "id": "HuggingFace Model",
+//     "name": "HuggingFace Model",
+//     "configuration_options": {
+//       "model_name": {
+//         "type": "string",
+//         "description": "HuggingFace model identifier",
+//         "default": "gpt2"
+//       }
+//     }
+//   }]
+// }
+
+// Load prompts
+const promptsResponse = await fetch('/api/prompts/load', {
+  method: 'POST',
+  body: JSON.stringify({ file_path: 'path/to/prompts.txt' })
+});
+
+// Run test
+const testResponse = await fetch('/api/test', {
+  method: 'POST',
+  body: JSON.stringify({
+    model_type: "HuggingFace Model",
+    configuration: {
+      model_name: "gpt2",
+      max_length: 50
+    },
+    prompt: "What is the meaning of life?",
+    selected_tests: ["Agency Analysis"]
+  })
+});
+```
+
+For detailed API documentation, refer to the [API Documentation](API_documentation.md).
 
 ## Troubleshooting
 
