@@ -1,49 +1,82 @@
-import React, { useState } from 'react';
-import { Home, TestTube2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import Navigation from './components/Navigation';
 import HomePage from './components/pages/HomePage';
 import TestPage from './components/pages/TestPage';
+import ContributePage from './components/pages/ContributePage';
+import LoginPage from './components/pages/LoginPage';
+import RegisterPage from './components/pages/RegisterPage';
+import ChangePasswordPage from './components/pages/ChangePasswordPage';
 
-// Navigation Component
-const Navigation = ({ currentPage, setCurrentPage }) => (
-  <nav className="bg-slate-800 text-white p-4 mb-6">
-    <div className="container mx-auto flex justify-between items-center">
-      <h1 className="text-xl font-bold">LLM Testing Framework</h1>
-      <div className="flex gap-4">
-        <button
-          onClick={() => setCurrentPage('home')}
-          className={`flex items-center gap-2 px-4 py-2 rounded ${
-            currentPage === 'home' ? 'bg-slate-600' : 'hover:bg-slate-700'
-          }`}
-        >
-          <Home className="h-4 w-4" />
-          Home
-        </button>
-        <button
-          onClick={() => setCurrentPage('test')}
-          className={`flex items-center gap-2 px-4 py-2 rounded ${
-            currentPage === 'test' ? 'bg-slate-600' : 'hover:bg-slate-700'
-          }`}
-        >
-          <TestTube2 className="h-4 w-4" />
-          Run Tests
-        </button>
-      </div>
-    </div>
-  </nav>
-);
-
-// Main App Component
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
+  const [user, setUser] = useState(null);
+  const [showRegister, setShowRegister] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
+    
+    if (token && savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error('Error parsing saved user:', error);
+        // Clear invalid data
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+    }
+  }, []);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    setCurrentPage('home');
+    setShowRegister(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    setCurrentPage('login');
+    setShowRegister(false);
+  };
+
+  // If not logged in, show login or register page
+  if (!user) {
+    if (showRegister) {
+      return (
+        <RegisterPage 
+          onRegisterSuccess={handleLogin}
+          onBackToLogin={() => setShowRegister(false)}
+        />
+      );
+    }
+    return (
+      <LoginPage 
+        onLoginSuccess={handleLogin}
+        onRegisterClick={() => setShowRegister(true)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <Navigation 
+        currentPage={currentPage} 
+        setCurrentPage={setCurrentPage}
+        user={user}
+        onLogout={handleLogout}
+      />
       <main className="py-8">
         {currentPage === 'home' ? (
           <HomePage setCurrentPage={setCurrentPage} />
-        ) : (
+        ) : currentPage === 'test' ? (
           <TestPage />
+        ) : currentPage === 'contribute' ? (
+          <ContributePage />
+        ) : (
+          <ChangePasswordPage />
         )}
       </main>
     </div>
