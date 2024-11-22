@@ -21,7 +21,7 @@ A modern React + Vite application providing a user interface for the LLM Assessm
 - [Configuration](#configuration)
 - [Development Guide](#development-guide)
 - [Troubleshooting](#troubleshooting)
-- [License](#license)
+
 
 ## Features
 

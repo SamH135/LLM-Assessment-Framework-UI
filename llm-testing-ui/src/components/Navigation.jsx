@@ -1,50 +1,70 @@
 import React from 'react';
-import { Home, TestTube2, GitBranch, Lock, LogOut } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Home, TestTube2, GitBranch, Lock, LogOut, BarChart2 } from 'lucide-react';
 
-const Navigation = ({ currentPage, setCurrentPage, user, onLogout }) => {
+const Navigation = ({ user, onLogout }) => {
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
+
   if (!user) return null;
 
   return (
     <nav className="bg-slate-800 text-white p-4 mb-6">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold">LLM Testing Framework</h1>
+        <Link to="/" className="text-xl font-bold">
+          LLM Testing Framework
+        </Link>
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => setCurrentPage('home')}
+          <Link
+            to="/"
             className={`flex items-center gap-2 px-4 py-2 rounded ${
-              currentPage === 'home' ? 'bg-slate-600' : 'hover:bg-slate-700'
+              isActive('/') ? 'bg-slate-600' : 'hover:bg-slate-700'
             }`}
           >
             <Home className="h-4 w-4" />
             Home
-          </button>
-          <button
-            onClick={() => setCurrentPage('test')}
+          </Link>
+          
+          <Link
+            to="/test"
             className={`flex items-center gap-2 px-4 py-2 rounded ${
-              currentPage === 'test' ? 'bg-slate-600' : 'hover:bg-slate-700'
+              isActive('/test') ? 'bg-slate-600' : 'hover:bg-slate-700'
             }`}
           >
             <TestTube2 className="h-4 w-4" />
             Run Tests
-          </button>
-          <button
-            onClick={() => setCurrentPage('contribute')}
+          </Link>
+
+          <Link
+            to="/results"
             className={`flex items-center gap-2 px-4 py-2 rounded ${
-              currentPage === 'contribute' ? 'bg-slate-600' : 'hover:bg-slate-700'
+              isActive('/results') ? 'bg-slate-600' : 'hover:bg-slate-700'
+            }`}
+          >
+            <BarChart2 className="h-4 w-4" />
+            Test Results
+          </Link>
+
+          <Link
+            to="/contribute"
+            className={`flex items-center gap-2 px-4 py-2 rounded ${
+              isActive('/contribute') ? 'bg-slate-600' : 'hover:bg-slate-700'
             }`}
           >
             <GitBranch className="h-4 w-4" />
             Contribute
-          </button>
-          <button
-            onClick={() => setCurrentPage('change-password')}
+          </Link>
+
+          <Link
+            to="/change-password"
             className={`flex items-center gap-2 px-4 py-2 rounded ${
-              currentPage === 'change-password' ? 'bg-slate-600' : 'hover:bg-slate-700'
+              isActive('/change-password') ? 'bg-slate-600' : 'hover:bg-slate-700'
             }`}
           >
             <Lock className="h-4 w-4" />
             Change Password
-          </button>
+          </Link>
+
           <button
             onClick={onLogout}
             className="flex items-center gap-2 px-4 py-2 rounded hover:bg-slate-700"
@@ -52,6 +72,7 @@ const Navigation = ({ currentPage, setCurrentPage, user, onLogout }) => {
             <LogOut className="h-4 w-4" />
             Logout
           </button>
+
           <span className="text-sm">Welcome, {user.fullName}</span>
         </div>
       </div>
