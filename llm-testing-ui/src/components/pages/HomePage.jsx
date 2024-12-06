@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { TestTube2, AlertCircle } from 'lucide-react';
 
-const HomePage = ({ setCurrentPage }) => {
+const HomePage = () => {
+  const navigate = useNavigate();
   const [evaluators, setEvaluators] = React.useState([]);
   const [error, setError] = React.useState('');
 
@@ -34,7 +36,6 @@ const HomePage = ({ setCurrentPage }) => {
         </p>
       </section>
 
-      {/* Model Testing card now spans full width */}
       <div className="w-full">
         <Card>
           <CardHeader>
@@ -54,7 +55,7 @@ const HomePage = ({ setCurrentPage }) => {
           </CardContent>
           <CardFooter>
             <button
-              onClick={() => setCurrentPage('test')}
+              onClick={() => navigate('/test')}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
             >
               Start Testing
