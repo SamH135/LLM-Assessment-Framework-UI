@@ -12,7 +12,7 @@ const Navigation = ({ user, onLogout }) => {
     <nav className="bg-slate-800 text-white p-4 mb-6">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-xl font-bold">
-          LLM Testing Framework
+          AI Guardian
         </Link>
         <div className="flex items-center gap-4">
           <Link

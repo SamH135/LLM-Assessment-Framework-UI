@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import FilePathInput from './FilePathInput';
 
 const PromptSelection = ({ 
   promptFilePath,
@@ -24,20 +24,20 @@ const PromptSelection = ({
   return (
     <div className="space-y-4">
       {/* File Path Input */}
-      <div>
-        <label className="block mb-2 font-medium">Prompt File Path</label>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={promptFilePath}
-            onChange={(e) => setPromptFilePath(e.target.value)}
-            placeholder="Enter path to prompts file"
-            className="flex-1 p-2 border rounded"
-          />
+      <div className="space-y-2">
+        <label className="block font-medium">Prompt File Path</label>
+        <div className="flex gap-2 items-center">
+          <div className="flex-grow">
+            <FilePathInput
+              value={promptFilePath}
+              onChange={(e) => setPromptFilePath(e.target.value)}
+              disabled={loading}
+            />
+          </div>
           <button
             onClick={loadPrompts}
             disabled={loading || !promptFilePath}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50 whitespace-nowrap"
           >
             Load Prompts
           </button>
@@ -47,9 +47,32 @@ const PromptSelection = ({
       {/* Categories and Prompts */}
       {Object.entries(prompts).map(([category, categoryPrompts]) => (
         <div key={category} className="border rounded-lg">
-          <div className="bg-gray-50 p-4 font-medium border-b flex items-center justify-between">
-            <span>{category}</span>
-            <ChevronDown className="h-5 w-5" />
+          <div className="bg-gray-50 p-4 font-medium border-b">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={categoryPrompts.every(prompt => 
+                  selectedPrompts.some(p => p.text === prompt.text && p.category === category)
+                )}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    // Add all prompts from category
+                    const newPrompts = categoryPrompts.map(prompt => ({
+                      text: prompt.text,
+                      category
+                    }));
+                    setSelectedPrompts(prev => [...prev, ...newPrompts]);
+                  } else {
+                    // Remove all prompts from category
+                    setSelectedPrompts(prev => 
+                      prev.filter(p => p.category !== category)
+                    );
+                  }
+                }}
+                className="mr-2"
+              />
+              {category}
+            </label>
           </div>
           <div className="p-4 space-y-2">
             {categoryPrompts.map((prompt) => (

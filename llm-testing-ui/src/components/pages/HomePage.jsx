@@ -29,10 +29,10 @@ const HomePage = () => {
   return (
     <div className="container mx-auto px-4 space-y-8">
       <section className="space-y-4">
-        <h2 className="text-2xl font-bold">Welcome to the LLM Testing Framework</h2>
+        <h2 className="text-2xl font-bold">Welcome to the AI Guardian LLM Testing Framework</h2>
         <p className="text-gray-600">
           Test and evaluate Language Models across multiple dimensions including safety, 
-          capability boundaries, and output quality.
+          capability boundaries, and output quality. 
         </p>
       </section>
 
