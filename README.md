@@ -62,7 +62,8 @@ A modern React + Vite application providing a user interface for the LLM Assessm
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/bwinson/SEP-Project-UI.git
+git clone https://github.com/SamH135/LLM-Assessment-Framework-UI.git
+
 cd llm-testing-ui
 ```
 
